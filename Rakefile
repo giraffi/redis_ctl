@@ -15,6 +15,11 @@ EOL
 
 rtarget = YAML.load(rtarget_cfg)
 
+## for redis_info
+def sybolize_list(hash)
+  Hash[hash.map { |k,v| [k.to_sym, v ] }]
+end
+
 
 desc "spawn three redises"
 task "rstart" do
@@ -101,6 +106,21 @@ task "rmasall" do
 end
 
 
+desc "role on cluster "
+task "rroll" do
+  rtarget_cfg
+  redis_ports.each_with_index do |x,y|
+    h,p = rtarget[y].split(":")
+
+    r = Redis.new(:host => h, :port => p)
+    begin
+      r_info = sybolize_list(r.info)
+      puts "#{rtarget[y]}: #{r_info[:role]}"
+    rescue Redis::CannotConnectError => e
+      puts e.message
+    end
+  end  
+end
 
 
 __END__
