@@ -43,12 +43,12 @@ task "rstop" do
   end  
 end
 
-desc "stop three redises"
+desc "stop one random redis"
 task "rstopr" do
   system("kill `cat #{c_dir}/tmp/pids/#{redis_ports.shuffle[0]}.pid`")
 end
 
-desc "rundom master"
+desc "promote rundom master"
 task "rmas" do
   master = rtarget.shuffle[0]
   mh,mp = master.split(":")
@@ -76,7 +76,7 @@ task "ping" do
   end  
 end
 
-desc "send ping to all redis"
+desc "send ping to all redis using ruby binding"
 task "rping" do
   rtarget_cfg
   redis_ports.each_with_index do |x,y|
